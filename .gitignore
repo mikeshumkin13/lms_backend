@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Env
+.env
+.venv/
+.env.*
+
+# Django
+db.sqlite3
+
+# Poetry
+poetry.lock
+
+# VSCode / PyCharm
+.idea/
+.vscode/
+
+# Mac
+.DS_Store
+
+
