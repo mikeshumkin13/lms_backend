@@ -1,14 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CourseViewSet, LessonListCreateView, LessonRetrieveUpdateDestroyView
+from .views import CourseViewSet, LessonViewSet
+
+app_name = 'materials'
 
 router = DefaultRouter()
 router.register('courses', CourseViewSet)
+router.register('lessons', LessonViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('lessons/', LessonListCreateView.as_view(), name='lesson-list-create'),
-    path('lessons/<int:pk>/', LessonRetrieveUpdateDestroyView.as_view(), name='lesson-detail'),
 ]
-
 
