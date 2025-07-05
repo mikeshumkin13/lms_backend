@@ -1,3 +1,7 @@
+from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Payment
+from .serializers import PaymentSerializer
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserProfileSerializer
@@ -10,4 +14,12 @@ class UserProfileView(RetrieveUpdateAPIView):
         return self.request.user
 
 
-    
+
+class PaymentListView(generics.ListAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['course', 'lesson', 'payment_method']
+    ordering_fields = ['payment_date']
+
+
