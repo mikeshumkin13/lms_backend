@@ -4,6 +4,12 @@ from users.serializers import PaymentSerializer
 
 
 class LessonSerializer(serializers.ModelSerializer):
+    def validate_video_url(self, value):
+        """Проверка, что ссылка на видео — с YouTube"""
+        if value and "youtube.com" not in value and "youtu.be" not in value:
+            raise serializers.ValidationError("Ссылка должна вести на YouTube")
+        return value
+
     class Meta:
         model = Lesson
         fields = "__all__"

@@ -21,14 +21,13 @@ class CourseListCreateView(generics.ListCreateAPIView):
 class CourseRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrModerator]
 
     def get_permissions(self):
         if self.request.method in ["PUT", "PATCH"]:
             return [IsAuthenticated(), IsModerator()]
         elif self.request.method == "DELETE":
             return [IsAuthenticated(), ~IsModerator()]
-        return [IsAuthenticated()]
+        return [IsAuthenticated(), IsOwnerOrModerator()]
 
 
 class LessonListCreateView(generics.ListCreateAPIView):
@@ -47,11 +46,12 @@ class LessonListCreateView(generics.ListCreateAPIView):
 class LessonRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrModerator]
 
     def get_permissions(self):
         if self.request.method in ["PUT", "PATCH"]:
             return [IsAuthenticated(), IsModerator()]
         elif self.request.method == "DELETE":
             return [IsAuthenticated(), ~IsModerator()]
-        return [IsAuthenticated()]
+        return [IsAuthenticated(), IsOwnerOrModerator()]
+
+
