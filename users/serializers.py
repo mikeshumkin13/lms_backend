@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from decimal import Decimal
 from rest_framework import serializers
 from .models import Payment
 
@@ -47,3 +48,17 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["email", "first_name", "city", "avatar"]
+
+
+
+class StripePaymentCreateSerializer(serializers.Serializer):
+    course = serializers.IntegerField()
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    payment_method = serializers.ChoiceField(choices=Payment.PAYMENT_METHOD_CHOICES)
+
+    def validate_amount(self, value):
+        if value <= Decimal("0.00"):
+            raise serializers.ValidationError("Сумма должна быть больше нуля.")
+        return value
+
+
