@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .services import create_stripe_checkout_session
 from rest_framework.response import Response
 from rest_framework import status
+from materials.models import Course, Lesson
 
 
 
@@ -51,19 +52,36 @@ class UserRegisterView(generics.CreateAPIView):
     permission_classes = []
 
 
-class StripePaymentCreateView(generics.CreateAPIView):
+class StripePaymentCreateView(generics.GenericAPIView):
     serializer_class = StripePaymentCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        payment = serializer.save()
 
-        session_url = create_stripe_checkout_session(payment)
+        validated_data = serializer.validated_data
+        course_id = validated_data.get("course")
+        lesson_id = validated_data.get("lesson")
+        amount = validated_data.get("amount")
+        payment_method = validated_data.get("payment_method")
+
+        # Получаем объекты курса или урока
+        course = Course.objects.filter(id=course_id).first() if course_id else None
+        lesson = Lesson.objects.filter(id=lesson_id).first() if lesson_id else None
+
+        # создаём Stripe-сессию
+        session_url = create_stripe_checkout_session(course, lesson, amount)
+
+        # сохраняем платёж
+        Payment.objects.create(
+            user=request.user,
+            course=course,
+            lesson=lesson,
+            amount=amount,
+            payment_method=payment_method,
+        )
+
         return Response({"checkout_url": session_url}, status=status.HTTP_201_CREATED)
-
-
-
 
 
