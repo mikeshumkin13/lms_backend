@@ -6,10 +6,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-
 from users.permissions import IsModerator, IsOwnerOrModerator
 from .models import Course, Lesson, CourseSubscription
 from .serializers import CourseSerializer, LessonSerializer
+from users.tasks import send_course_update_email_task  # импорт задачи Celery
+
 
 class Not(BasePermission):
     def __init__(self, permission):
@@ -20,8 +21,6 @@ class Not(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return not self.permission.has_object_permission(request, view, obj)
-
-
 
 
 class CourseListCreateView(generics.ListCreateAPIView):
@@ -74,6 +73,19 @@ class LessonRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         elif self.request.method == "DELETE":
             return [IsAuthenticated(), Not(IsModerator())]
         return [IsAuthenticated(), IsOwnerOrModerator()]
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+
+        # Получаем курс, связанный с уроком
+        course = instance.course
+
+        # Получаем email всех подписчиков курса
+        emails = list(course.subscribers.values_list("email", flat=True))
+
+        if emails:
+            # Вызываем Celery-задачу
+            send_course_update_email_task.delay(course.id, emails)
 
 
 class CourseSubscriptionToggleView(APIView):

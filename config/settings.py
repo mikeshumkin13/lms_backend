@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 from dotenv import load_dotenv
 
@@ -18,6 +19,14 @@ load_dotenv()
 
 
 from pathlib import Path
+
+
+CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,6 +57,7 @@ INSTALLED_APPS = [
     "users",
     "materials",
     'drf_yasg',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
