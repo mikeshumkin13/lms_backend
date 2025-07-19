@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "users",
     "materials",
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +147,18 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
+
+
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT авторизация. Пример: Bearer <твой токен>"
+        }
+    },
+}
+
+
