@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from users.permissions import IsModerator, IsOwnerOrModerator
 from .models import Course, Lesson, CourseSubscription
 from .serializers import CourseSerializer, LessonSerializer
-from users.tasks import send_course_update_email_task  # импорт задачи Celery
+from users.tasks import send_course_update_email_task
 
 
 class Not(BasePermission):
