@@ -172,3 +172,13 @@ SWAGGER_SETTINGS = {
 }
 
 
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'deactivate-inactive-users-every-night': {
+        'task': 'users.tasks.deactivate_inactive_users_task',
+        'schedule': crontab(hour=0, minute=0),
+    },
+}
+
+
