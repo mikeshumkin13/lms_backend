@@ -1,41 +1,33 @@
 import os
+
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Базовая директория
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Загружаем переменные окружения
 load_dotenv(BASE_DIR / ".env")
 
+SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# Настройки безопасности
-SECRET_KEY = "django-insecure-n=05vn!92_m%j0^be04-%gbku%v!!lrwt(vq95$cj&zzko4l09"
-DEBUG = True
+DJANGO_ALLOWED_HOSTS_RAW = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1")
+ALLOWED_HOSTS = [host.strip() for host in DJANGO_ALLOWED_HOSTS_RAW.split(",")]
 
-print("DEBUG =", os.getenv("DEBUG"))
-print("ALLOWED_HOSTS_RAW =", os.getenv("ALLOWED_HOSTS"))
-import sys
-print("⚠️ settings.py is being used:", __file__, file=sys.stderr)
+print("⚙️ DJANGO_ALLOWED_HOSTS_RAW =", DJANGO_ALLOWED_HOSTS_RAW, file=sys.stderr)
+print("⚙️ ALLOWED_HOSTS =", ALLOWED_HOSTS, file=sys.stderr)
+print("✅ settings.py loaded from:", __file__, file=sys.stderr)
 
-# ALLOWED_HOSTS из .env
-ALLOWED_HOSTS = [host.strip() for host in os.getenv("ALLOWED_HOSTS", "").split(",") if host.strip()]
-
-
-print("⚠️ ALLOWED_HOSTS =", ALLOWED_HOSTS)
-print("⚠️ repr(ALLOWED_HOSTS):", repr(ALLOWED_HOSTS))
 
 # Stripe
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 
 # Celery (Redis)
 CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_TIMEZONE = "Europe/Moscow"
 
-# Django apps
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -79,7 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# БД
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -91,7 +82,6 @@ DATABASES = {
     }
 }
 
-# Пароли
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -99,22 +89,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# Язык, время
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Europe/Moscow"
 USE_I18N = True
 USE_TZ = True
 
-# Статика
 STATIC_URL = "static/"
-
-# Первичный ключ
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Кастомный пользователь
 AUTH_USER_MODEL = "users.User"
 
-# DRF
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -123,7 +106,6 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
-# Swagger
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
         "Bearer": {
@@ -135,7 +117,6 @@ SWAGGER_SETTINGS = {
     },
 }
 
-# Celery Beat
 from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
@@ -144,10 +125,5 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(hour=0, minute=0),
     },
 }
-
-
-print("===== DEBUG ENVIRONMENT =====")
-print("os.getenv('ALLOWED_HOSTS') =", os.getenv("ALLOWED_HOSTS"))
-print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
 
 
