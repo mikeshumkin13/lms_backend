@@ -92,13 +92,16 @@ class CourseSubscriptionToggleView(APIView):
     """
     Эндпоинт для подписки/отписки пользователя на курс.
     """
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         course_id = request.data.get("course")
         course = get_object_or_404(Course, id=course_id)
 
-        subscription = CourseSubscription.objects.filter(user=request.user, course=course)
+        subscription = CourseSubscription.objects.filter(
+            user=request.user, course=course
+        )
 
         if subscription.exists():
             subscription.delete()
@@ -108,6 +111,3 @@ class CourseSubscriptionToggleView(APIView):
             message = "Подписка оформлена"
 
         return Response({"message": message}, status=status.HTTP_201_CREATED)
-
-
-

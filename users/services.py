@@ -30,5 +30,3 @@ def create_stripe_checkout_session(course, lesson, amount):
     )
 
     return session.url
-
-

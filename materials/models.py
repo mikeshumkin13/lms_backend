@@ -50,19 +50,20 @@ class CourseSubscription(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="subscriptions",
-        verbose_name="Подписчик"
+        verbose_name="Подписчик",
     )
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
         related_name="subscriptions",
-        verbose_name="Курс"
+        verbose_name="Курс",
     )
 
     class Meta:
-        unique_together = ('user', 'course')  # один пользователь может подписаться на курс только один раз
+        unique_together = (
+            "user",
+            "course",
+        )  # один пользователь может подписаться на курс только один раз
 
     def __str__(self):
         return f"{self.user.email} подписан на {self.course.title}"
-
-

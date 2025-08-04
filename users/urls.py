@@ -12,5 +12,9 @@ urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name="token_obtain"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("register/", UserRegisterView.as_view(), name="user-register"),
-    path("payments/create-stripe/", StripePaymentCreateView.as_view(), name="stripe-payment"),
+    path(
+        "payments/create-stripe/",
+        StripePaymentCreateView.as_view(),
+        name="stripe-payment",
+    ),
 ]

@@ -8,7 +8,7 @@ from django.http import JsonResponse
 schema_view = get_schema_view(
     openapi.Info(
         title="LMS API",
-        default_version='v1',
+        default_version="v1",
         description="Документация к API учебной платформы",
         contact=openapi.Contact(email="admin@example.com"),
         license=openapi.License(name="BSD License"),
@@ -21,10 +21,17 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/materials/", include("materials.urls", namespace="materials")),
     path("api/users/", include("users.urls", namespace="users")),
-    path("swagger/", schema_view.with_ui('swagger', cache_timeout=0), name="schema-swagger-ui"),
-    path("redoc/", schema_view.with_ui('redoc', cache_timeout=0), name="schema-redoc"),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("docs/", schema_view.with_ui("swagger", cache_timeout=0), name="swagger-docs"),
-    path("", lambda request: JsonResponse({"status": "ok", "message": "Добро пожаловать в LMS API!"})),
+    path(
+        "",
+        lambda request: JsonResponse(
+            {"status": "ok", "message": "Добро пожаловать в LMS API!"}
+        ),
+    ),
 ]
-
-

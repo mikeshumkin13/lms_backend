@@ -50,7 +50,6 @@ class PublicUserProfileSerializer(serializers.ModelSerializer):
         fields = ["email", "first_name", "city", "avatar"]
 
 
-
 class StripePaymentCreateSerializer(serializers.Serializer):
     course = serializers.IntegerField(required=False)
     lesson = serializers.IntegerField(required=False)
@@ -61,11 +60,12 @@ class StripePaymentCreateSerializer(serializers.Serializer):
         if not data.get("course") and not data.get("lesson"):
             raise serializers.ValidationError("Нужно указать курс или урок.")
         if data.get("course") and data.get("lesson"):
-            raise serializers.ValidationError("Нельзя указывать одновременно курс и урок.")
+            raise serializers.ValidationError(
+                "Нельзя указывать одновременно курс и урок."
+            )
         return data
 
     def validate_amount(self, value):
         if value <= Decimal("0.00"):
             raise serializers.ValidationError("Сумма должна быть больше нуля.")
         return value
-
