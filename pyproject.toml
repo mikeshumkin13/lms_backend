@@ -5,7 +5,7 @@ description = ""
 authors = ["a12345 <shu.m2010@yandex.ru>"]
 readme = "README.md"
 
-[tool.poetry.packages]
+[[tool.poetry.packages]]
 include = "config"
 
 [tool.poetry.dependencies]
