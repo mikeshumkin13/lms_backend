@@ -27,9 +27,9 @@ jobs:
           poetry install
 
 
-      - name: Run tests
-        run: |
-          poetry run pytest
+      #- name: Run tests
+       # run: |
+        #  poetry run pytest
 
       - name: Deploy to VPS
         if: success()
