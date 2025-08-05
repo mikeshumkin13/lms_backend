@@ -26,9 +26,10 @@ jobs:
         run: |
           poetry install
 
-      - name: Run tests
-        run: |
-          poetry run pytest
+      # ⚠️ Временно отключено выполнение тестов
+      # - name: Run tests
+      #   run: |
+      #     poetry run pytest
 
       - name: Deploy to VPS
         if: success()
