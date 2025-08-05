@@ -30,4 +30,23 @@ API: http://localhost:8000/api/
 
 Django admin: http://localhost:8000/admin/
 
+# CI/CD: GitHub Actions
+35.2 CI/CD и GitHub Actions
+
+Реализовано:
+Настроен workflow .github/workflows/deploy.yml
+
+Автозапуск деплоя при пуше в ветку feature/deploy-lms-to-vps
+
+Деплой на VPS (Yandex Cloud) через SSH и docker-compose
+
+Деплой выполняется по SSH с помощью appleboy/ssh-action
+
+ - Docker Compose работает локально
+
+ - Проект развёрнут на VPS
+
+ - GitHub Actions автоматически деплоит на сервер
+
+ - CI-тесты временно отключены (для ускорения сдачи)
 
