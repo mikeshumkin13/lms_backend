@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "materials",
     "drf_yasg",
     "django_celery_beat",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -79,11 +80,26 @@ DATABASES = {
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
         "HOST": os.getenv("POSTGRES_HOST"),
         "PORT": os.getenv("POSTGRES_PORT"),
-        "TEST": {
-            "NAME": "test_lms"
-        }
+        "TEST": {"NAME": "test_lms"}
     }
 }
+
+
+RUNNING_TESTS = (
+    "pytest" in sys.modules
+    or any("pytest" in arg for arg in sys.argv)
+    or os.getenv("PYTEST_CURRENT_TEST") is not None
+)
+
+if RUNNING_TESTS:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "test.sqlite3",
+        }
+    }
+
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
