@@ -8,7 +8,6 @@ from rest_framework import status
 from materials.models import Course, Lesson
 
 
-
 from .models import Payment
 from .serializers import (
     PaymentSerializer,
@@ -83,5 +82,3 @@ class StripePaymentCreateView(generics.GenericAPIView):
         )
 
         return Response({"checkout_url": session_url}, status=status.HTTP_201_CREATED)
-
-
